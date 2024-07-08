@@ -2,9 +2,9 @@ function Cart() {
     return {
       // Cart properties
       totalCost: 0,
-      smallPizzaPrice: 20.95,
-      mediumPizzaPrice: 98.05,
-      largePizzaPrice: 167.10,
+      smallPizzaPrice: 49.00,
+      mediumPizzaPrice: 79.00,
+      largePizzaPrice: 119.00,
       smallPizzaTotal: 0,
       mediumPizzaTotal: 0,
       largePizzaTotal: 0,
