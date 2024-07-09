@@ -10,150 +10,122 @@
     <script src="preloader.js"></script>
     <script src="index.js" defer></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-   
-    
 
     <title>Pizza Cart</title>
 </head>
 <body>
-    
-    
     <div class="preloader">
         <div class="spinner"></div>
-      </div>
+    </div>
       
     <main class="bg-body">
         <div class="header">
             <h1>Perfect Pizza</h1>
         </div>
         <section x-data="Cart" class="sections" >
-            <section  class="cart mb-2" >
+            <section class="cart mb-2">
                 <div>
                     <h1 class="text-center">Shopping Cart</h1>
                 </div>
         
                 <div x-show="!orderActive" x-transition>
-                    <h3 class="text-center" >Your cart is empty</h3>
-                
+                    <h3 class="text-center">Your cart is empty</h3>
                 </div>
+                
                 <div x-show="orderActive" class="mx-auto shoppingCart" x-transition>
                     <div x-show="smallPizzaOrder" class="row mb-3">
-                        <div class="col" >
-                            <span >Small</span>
+                        <div class="col">
+                            <span>Small (<span x-text="smallPizzaQuantity"></span>)</span>
                         </div>
                         <div class="col">
                             <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('small')">+</button>
                             <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('small')">-</button>
-
                         </div>
                         <div class="col">
                             <span x-text="smallPizzaTotal"></span>
                         </div>
-                       
                     </div>
+                    
                     <div x-show="mediumPizzaOrder" class="row mb-3">
                         <div class="col">
-                            <span >Medium</span>
+                            <span>Medium (<span x-text="mediumPizzaQuantity"></span>)</span>
                         </div>
                         <div class="col">
-                            
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                              x-bind:disabled="paymentReady" @click="addCart('medium')">
-                              +
-                            </button>
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                             x-bind:disabled="paymentReady" @click="removeCart('medium')">
-                             -
-                            </button>
-
+                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('medium')">+</button>
+                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('medium')">-</button>
                         </div>
                         <div class="col">
                             <span x-text="mediumPizzaTotal"></span>
                         </div>
-
                     </div>
                    
                     <div x-show="largePizzaOrder" class="row">
                         <div class="col">
-                            <span >Large</span>
+                            <span>Large (<span x-text="largePizzaQuantity"></span>)</span>
                         </div>
                         <div class="col">
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                              x-bind:disabled="paymentReady" @click="addCart('large')">
-                              +
-                            </button>
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                             x-bind:disabled="paymentReady" @click="removeCart('large')">
-                             -
-                            </button>
+                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('large')">+</button>
+                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('large')">-</button>
                         </div>
                         <div class="col pl-1">
                             <span x-text="largePizzaTotal"></span>
                         </div>
-
                     </div>
                    
                     <div class="row mt-2">
                         <div class="col">
-                            <span >Total Cost</span>
+                            <span>Total Cost</span>
                         </div>
                         <div class="col d-flex justify-content-center">
-                            <span x-text="getTotalCost"></span>
+                            <span x-text="getTotalCost()"></span>
                         </div>
-                        
                     </div>
                 
-                    <div x-show="totalCost>0 && !paymentReady" x-transition >
-            
-                        <div  class="d-flex justify-content-center">
-                            <button class="mb-3 w-50"@click="checkout()">Checkout</button>
+                    <div x-show="totalCost > 0 && !paymentReady" x-transition>
+                        <div class="d-flex justify-content-center">
+                            <button class="mb-3 w-50" @click="checkout()">Checkout</button>
                         </div>
                     </div>
                     
-                    <div  x-show="thankYouText" x-transition>
-                        <div class="d-flex justify-content-center" >
+                    <div x-show="thankYouText" x-transition>
+                        <div class="d-flex justify-content-center">
                             <span><em>Enjoy</em> your pizzas.<span x-text="getChange()"></span></span>
                         </div>
                     </div>
+                    
                     <div x-show="insufficientText" x-transition>
-                        <div class="d-flex justify-content-center" >
+                        <div class="d-flex justify-content-center">
                             <span><em>Sorry</em> - that is not enough money!</span>
                         </div>
                     </div>
+                    
                     <div x-show="paymentReady" x-transition>
-                       
-                          
-                        <span>Payment amount:</span><input  placeholder="Enter numbers only" x-model="payment"/>
+                        <span>Payment amount:</span><input placeholder="Enter numbers only" x-model="payment"/>
                         <div class="d-flex justify-content-center">
                             <button class="w-25 mb-3 mt-2" @click="pay()">Pay</button>
                         </div>
                     </div>
-                    
                 </div>
-               
-                
             </section>
-            <section class="pizza " >
-                
+            
+            <section class="pizza">
                 <section class="small-pizza">
-                    
                     <img src="./smaller.png" alt="Small Pizza"/>
                     <div class="price">
                         <h2>Small pizza</h2>
                         <h3>R49.00</h3>
                     </div>
                     <div class="toppings-description">
-                        Small Pizza with Pepperoni,Mushrooms,Onions,
+                        Small Pizza with Pepperoni, Mushrooms, Onions,
                         Green Peppers, Sausage, Bacon, Black Olives,
                         Pineapple and other toppings.
                     </div>
                     <div class="buyBtn d-flex justify-content-center mt-10">
-                        <button @click="buy('small')"class="w-75 " >Buy</button>
+                        <button @click="buy('small')" class="w-75">Buy</button>
                     </div>
                 </section>
 
                 <section class="medium-pizza">
-                    
                     <img src="./mediun.png" alt="Medium Pizza"/>
                     <div class="price">
                         <h2>Medium Pizza</h2>
@@ -161,54 +133,46 @@
                     </div>
                     <div class="toppings-description">
                         Medium Pizza with Pepperoni, Mushrooms,
-                        Onions,Green Peppers, Sausage, Bacon,
-                        Black Olives,Pineapple,Ham,
-                        Jalapenos,Tomatoes and Extra Cheese toppings.
+                        Onions, Green Peppers, Sausage, Bacon,
+                        Black Olives, Pineapple, Ham, Jalapenos,
+                        Tomatoes and Extra Cheese toppings.
                     </div>
                     <div class="buyBtn d-flex justify-content-center mb-2">
-                        <button @click="buy('medium')"class="w-75 " >Buy</button>
+                        <button @click="buy('medium')" class="w-75">Buy</button>
                     </div>
-                    
                 </section>
 
                 <section class="large-pizza">
-                    
                     <img src="./larg.png" alt="Large Pizza"/>
                     <div class="price">
                         <h2>Large Pizza</h2>
                         <h3>R119.00</h3>
                     </div>
                     <div class="toppings-description">
-                        Large Pizza Pepperoni, Mushrooms, Onions,
-                        Green Peppers, Sausage, Bacon ,Black Olives, 
+                        Large Pizza with Pepperoni, Mushrooms, Onions,
+                        Green Peppers, Sausage, Bacon, Black Olives, 
                         Pineapple, Ham, Jalapeno, Tomatoes, Extra Cheese,
                         Ground Beef, Canadian Bacon and Feta Cheese.
                     </div>
                     <div class="buyBtn d-flex justify-content-center mb-2">
-                        <button @click="buy('large')"class="w-75 " >Buy</button>
+                        <button @click="buy('large')" class="w-75">Buy</button>
                     </div>
-                    
                 </section>
             </section>
+            
             <section class="contacts-address">
-                
                 <div class="contacts">
                     <p>Phone: 021 4537 5568</p>
                     <p>Email: info@perfectpizza.com</p>
                     <p>Website: www.perfectpizza.com</p>
                 </div>
-
                 <div class="address">
                     <p>Perfect Pizza</p>
                     <p>123 Kingsway Avenue</p>
                     <p>Johannesburg</p>
                 </div>
-                
             </section>
-            
         </section>
-        
     </main>
-    
 </body>
 </html>
