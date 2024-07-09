@@ -1,214 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  
-    <link rel="stylesheet" href="styles.css">
-    <script src="preloader.js"></script>
-    <script src="index.js" defer></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
-   
-    
-
-    <title>Pizza Cart</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+  <script src="preloader.js"></script>
+  <script src="index.js" defer></script>
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <title>Pizza Cart</title>
 </head>
 <body>
-    
-    
-    <div class="preloader">
-        <div class="spinner"></div>
-      </div>
-      
-    <main class="bg-body">
-        <div class="header">
-            <h1>Perfect Pizza</h1>
+  <div class="preloader">
+    <div class="spinner"></div>
+  </div>
+  <main class="bg-body">
+    <div class="header">
+      <h1>Perfect Pizza</h1>
+    </div>
+    <section x-data="Cart" class="sections">
+      <section class="cart mb-2">
+        <div>
+          <h1 class="text-center">Shopping Cart</h1>
         </div>
-        <section x-data="Cart" class="sections" >
-            <section  class="cart mb-2" >
-                <div>
-                    <h1 class="text-center">Shopping Cart</h1>
-                </div>
-        
-                <div x-show="!orderActive" x-transition>
-                    <h3 class="text-center" >Your cart is empty</h3>
-                
-                </div>
-                <div x-show="orderActive" class="mx-auto shoppingCart" x-transition>
-                    <div x-show="smallPizzaOrder" class="row mb-3">
-                        <div class="col" >
-                            <span >Small</span>
-                        </div>
-                        <div class="col">
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('small')">+</button>
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('small')">-</button>
-
-                        </div>
-                        <div class="col">
-                            <span x-text="smallPizzaTotal"></span>
-                        </div>
-                       
-                    </div>
-                    <div x-show="mediumPizzaOrder" class="row mb-3">
-                        <div class="col">
-                            <span >Medium</span>
-                        </div>
-                        <div class="col">
-                            
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                              x-bind:disabled="paymentReady" @click="addCart('medium')">
-                              +
-                            </button>
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                             x-bind:disabled="paymentReady" @click="removeCart('medium')">
-                             -
-                            </button>
-
-                        </div>
-                        <div class="col">
-                            <span x-text="mediumPizzaTotal"></span>
-                        </div>
-
-                    </div>
-                   
-                    <div x-show="largePizzaOrder" class="row">
-                        <div class="col">
-                            <span >Large</span>
-                        </div>
-                        <div class="col">
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                              x-bind:disabled="paymentReady" @click="addCart('large')">
-                              +
-                            </button>
-                            <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" 
-                             x-bind:disabled="paymentReady" @click="removeCart('large')">
-                             -
-                            </button>
-                        </div>
-                        <div class="col pl-1">
-                            <span x-text="largePizzaTotal"></span>
-                        </div>
-
-                    </div>
-                   
-                    <div class="row mt-2">
-                        <div class="col">
-                            <span >Total Cost</span>
-                        </div>
-                        <div class="col d-flex justify-content-center">
-                            <span x-text="getTotalCost"></span>
-                        </div>
-                        
-                    </div>
-                
-                    <div x-show="totalCost>0 && !paymentReady" x-transition >
-            
-                        <div  class="d-flex justify-content-center">
-                            <button class="mb-3 w-50"@click="checkout()">Checkout</button>
-                        </div>
-                    </div>
-                    
-                    <div  x-show="thankYouText" x-transition>
-                        <div class="d-flex justify-content-center" >
-                            <span><em>Enjoy</em> your pizzas.<span x-text="getChange()"></span></span>
-                        </div>
-                    </div>
-                    <div x-show="insufficientText" x-transition>
-                        <div class="d-flex justify-content-center" >
-                            <span><em>Sorry</em> - that is not enough money!</span>
-                        </div>
-                    </div>
-                    <div x-show="paymentReady" x-transition>
-                       
-                          
-                        <span>Payment amount:</span><input  placeholder="Enter numbers only" x-model="payment"/>
-                        <div class="d-flex justify-content-center">
-                            <button class="w-25 mb-3 mt-2" @click="pay()">Pay</button>
-                        </div>
-                    </div>
-                    
-                </div>
-               
-                
-            </section>
-            <section class="pizza " >
-                
-                <section class="small-pizza">
-                    
-                    <img src="./smaller.png" alt="Small Pizza"/>
-                    <div class="price">
-                        <h2>Small pizza</h2>
-                        <h3>R49.00</h3>
-                    </div>
-                    <div class="toppings-description">
-                        Small Pizza with Pepperoni,Mushrooms,Onions,
-                        Green Peppers, Sausage, Bacon, Black Olives,
-                        Pineapple and other toppings.
-                    </div>
-                    <div class="buyBtn d-flex justify-content-center mt-10">
-                        <button @click="buy('small')"class="w-75 " >Buy</button>
-                    </div>
-                </section>
-
-                <section class="medium-pizza">
-                    
-                    <img src="./mediun.png" alt="Medium Pizza"/>
-                    <div class="price">
-                        <h2>Medium Pizza</h2>
-                        <h3>R79.00</h3>
-                    </div>
-                    <div class="toppings-description">
-                        Medium Pizza with Pepperoni, Mushrooms,
-                        Onions,Green Peppers, Sausage, Bacon,
-                        Black Olives,Pineapple,Ham,
-                        Jalapenos,Tomatoes and Extra Cheese toppings.
-                    </div>
-                    <div class="buyBtn d-flex justify-content-center mb-2">
-                        <button @click="buy('medium')"class="w-75 " >Buy</button>
-                    </div>
-                    
-                </section>
-
-                <section class="large-pizza">
-                    
-                    <img src="./larg.png" alt="Large Pizza"/>
-                    <div class="price">
-                        <h2>Large Pizza</h2>
-                        <h3>R119.00</h3>
-                    </div>
-                    <div class="toppings-description">
-                        Large Pizza Pepperoni, Mushrooms, Onions,
-                        Green Peppers, Sausage, Bacon ,Black Olives, 
-                        Pineapple, Ham, Jalapeno, Tomatoes, Extra Cheese,
-                        Ground Beef, Canadian Bacon and Feta Cheese.
-                    </div>
-                    <div class="buyBtn d-flex justify-content-center mb-2">
-                        <button @click="buy('large')"class="w-75 " >Buy</button>
-                    </div>
-                    
-                </section>
-            </section>
-            <section class="contacts-address">
-                
-                <div class="contacts">
-                    <p>Phone: 021 4537 5568</p>
-                    <p>Email: info@perfectpizza.com</p>
-                    <p>Website: www.perfectpizza.com</p>
-                </div>
-
-                <div class="address">
-                    <p>Perfect Pizza</p>
-                    <p>123 Kingsway Avenue</p>
-                    <p>Johannesburg</p>
-                </div>
-                
-            </section>
-            
+        <div x-show="!orderActive" x-transition>
+          <h3 class="text-center">Your cart is empty</h3>
+        </div>
+        <div x-show="orderActive" class="mx-auto shoppingCart" x-transition>
+          <!-- Small Pizza Section -->
+          <div x-show="smallPizzaOrder" class="row mb-3">
+            <div class="col">
+              <span>Small <span x-show="smallPizzaQuantity > 1">x {{ smallPizzaQuantity }}</span></span>
+            </div>
+            <div class="col">
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('small')">+</button>
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('small')">-</button>
+            </div>
+            <div class="col">
+              <span x-text="smallPizzaTotal"></span>
+            </div>
+          </div>
+          <!-- Medium Pizza Section -->
+          <div x-show="mediumPizzaOrder" class="row mb-3">
+            <div class="col">
+              <span>Medium <span x-show="mediumPizzaQuantity > 1">x {{ mediumPizzaQuantity }}</span></span>
+            </div>
+            <div class="col">
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('medium')">+</button>
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('medium')">-</button>
+            </div>
+            <div class="col">
+              <span x-text="mediumPizzaTotal"></span>
+            </div>
+          </div>
+          <!-- Large Pizza Section -->
+          <div x-show="largePizzaOrder" class="row mb-3">
+            <div class="col">
+              <span>Large <span x-show="largePizzaQuantity > 1">x {{ largePizzaQuantity }}</span></span>
+            </div>
+            <div class="col">
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="addCart('large')">+</button>
+              <button :class="['rounded-circle', paymentReady ? 'disabled' : '']" x-bind:disabled="paymentReady" @click="removeCart('large')">-</button>
+            </div>
+            <div class="col">
+              <span x-text="largePizzaTotal"></span>
+            </div>
+          </div>
+          <!-- Total Cost Section -->
+          <div class="row mt-2">
+            <div class="col">
+              <span>Total Cost</span>
+            </div>
+            <div class="col d-flex justify-content-center">
+              <span x-text="getTotalCost()"></span>
+            </div>
+          </div>
+          <!-- Checkout Button Section -->
+          <div x-show="totalCost > 0 && !paymentReady" x-transition>
+            <div class="d-flex justify-content-center">
+              <button class="mb-3 w-50" @click="checkout()">Checkout</button>
+            </div>
+          </div>
+          <!-- Thank You Message Section -->
+          <div x-show="thankYouText" x-transition>
+            <div class="d-flex justify-content-center">
+              <span><em>Enjoy</em> your pizzas. <span x-text="getChange()"></span></span>
+            </div>
+          </div>
+          <!-- Insufficient Payment Message Section -->
+          <div x-show="insufficientText" x-transition>
+            <div class="d-flex justify-content-center">
+              <span><em>Sorry</em> - that is not enough money!</span>
+            </div>
+          </div>
+          <!-- Payment Input Section -->
+          <div x-show="paymentReady" x-transition>
+            <span>Payment amount:</span><input placeholder="Enter numbers only" x-model="payment"/>
+            <div class="d-flex justify-content-center">
+              <button class="w-25 mb-3 mt-2" @click="pay()">Pay</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Pizza Selection Section -->
+      <section class="pizza">
+        <!-- Small Pizza -->
+        <section class="small-pizza">
+          <img src="./smaller.png" alt="Small Pizza"/>
+          <div class="price">
+            <h2>Small pizza</h2>
+            <h3>R49.00</h3>
+          </div>
+          <div class="toppings-description">
+            Small Pizza with Pepperoni, Mushrooms, Onions, Green Peppers, Sausage, Bacon, Black Olives, Pineapple and other toppings.
+          </div>
+          <div class="buyBtn d-flex justify-content-center mt-10">
+            <button @click="buy('small')" class="w-75">Buy</button>
+          </div>
         </section>
-        
-    </main>
-    
+        <!-- Medium Pizza -->
+        <section class="medium-pizza">
+          <img src="./mediun.png" alt="Medium Pizza"/>
+          <div class="price">
+            <h2>Medium Pizza</h2>
+            <h3>R79.00</h3>
+          </div>
+          <div class="toppings-description">
+            Medium Pizza with Pepperoni, Mushrooms, Onions, Green Peppers, Sausage, Bacon, Black Olives, Pineapple, Ham, Jalapenos, Tomatoes and Extra Cheese toppings.
+          </div>
+          <div class="buyBtn d-flex justify-content-center mb-2">
+            <button @click="buy('medium')" class="w-75">Buy</button>
+          </div>
+        </section>
+        <!-- Large Pizza -->
+        <section class="large-pizza">
+          <img src="./larg.png" alt="Large Pizza"/>
+          <div class="price">
+            <h2>Large Pizza</h2>
+            <h3>R119.00</h3>
+          </div>
+          <div class="toppings-description">
+            Large Pizza with Pepperoni, Mushrooms, Onions, Green Peppers, Sausage, Bacon, Black Olives, Pineapple, Ham, Jalapeno, Tomatoes, Extra Cheese, Ground Beef, Canadian Bacon and Feta Cheese toppings.
+          </div>
+          <div class="buyBtn d-flex justify-content-center mb-2">
+            <button @click="buy('large')" class="w-75">Buy</button>
+          </div>
+        </section>
+      </section>
+      <!-- Contact and Address Section -->
+      <section class="contacts-address">
+        <div class="contacts">
+          <p>Phone: 021 4537 5568</p>
+          <p>Email: info@perfectpizza.com</p>
+          <p>Website: www.perfectpizza.com</p>
+        </div>
+        <div class="address">
+          <p>Perfect Pizza</p>
+          <p>123 Kingsway Avenue</p>
+          <p>Johannesburg</p>
+        </div>
+      </section>
+    </section>
+  </main>
 </body>
+<script>
+  function Cart() {
+    return {
+      // Cart properties
+      totalCost: 0,
+      smallPizzaPrice: 49.00,
+      mediumPizzaPrice: 79.00,
+      largePizzaPrice: 119.00,
+      smallPizzaTotal: 0,
+      mediumPizzaTotal: 0,
+      largePizzaTotal: 0,
+      smallPizzaOrder: false,
+      mediumPizzaOrder: false,
+      largePizzaOrder: false,
+      smallPizzaQuantity: 0,
+      mediumPizzaQuantity: 0,
+      largePizzaQuantity: 0,
+      orderActive: false,
+      paymentReady: false,
+      thankYouText: false,
+      insufficientText: false,
+      payment: 0,
+      // Cart methods
+      addCart(pizzaSize) {
+        // Increment pizza total based on size
+        switch (pizzaSize) {
+          case 'small':
+            this.smallPizzaTotal += this.smallPizzaPrice;
+            this.smallPizzaQuantity++;
+            this.smallPizzaTotal = this.priceFormat(this.smallPizzaTotal);
+            break;
+          case 'medium':
+            this.mediumPizzaTotal += this.mediumPizzaPrice;
+            this.mediumPizzaQuantity++;
+            this.mediumPizzaTotal = this.priceFormat(this.mediumPizzaTotal);
+            break;
+          case 'large':
+            this.largePizzaTotal += this.largePizzaPrice;
+            this.largePizzaQuantity++;
+            this.largePizzaTotal = this.priceFormat(this.largePizzaTotal);
+            break;
+        }
+      },
+      removeCart(pizzaSize) {
+        // Decrement pizza total based on size
+        switch (pizzaSize) {
+          case 'small':
+            if (this.smallPizzaTotal > 0) {
+              this.smallPizzaTotal -= this.smallPizzaPrice;
+              this.smallPizzaQuantity--;
+              this.smallPizzaTotal = this.priceFormat(this.smallPizzaTotal);
+              this.smallPizzaOrder = this.smallPizzaTotal !== 0;
+            }
+            break;
+          case 'medium':
+            if (this.mediumPizzaTotal > 0) {
+              this.mediumPizzaTotal -= this.mediumPizzaPrice;
+              this.mediumPizzaQuantity--;
+              this.mediumPizzaTotal = this.priceFormat(this.mediumPizzaTotal);
+              this.mediumPizzaOrder = this.mediumPizzaTotal !== 0;
+            }
+            break;
+          case 'large':
+            if (this.largePizzaTotal > 0) {
+              this.largePizzaTotal -= this.largePizzaPrice;
+              this.largePizzaQuantity--;
+              this.largePizzaTotal = this.priceFormat(this.largePizzaTotal);
+              this.largePizzaOrder = this.largePizzaTotal !== 0;
+            }
+            break;
+        }
+      },
+      buy(pizzaSize) {
+        // Set pizza order based on size
+        switch (pizzaSize) {
+          case 'small':
+            this.smallPizzaOrder = true;
+            break;
+          case 'medium':
+            this.mediumPizzaOrder = true;
+            break;
+          case 'large':
+            this.largePizzaOrder = true;
+            break;
+        }
+        this.addCart(pizzaSize);
+        this.orderActive = true;
+      },
+      getTotalCost() {
+        // Calculate total cost and update order status
+        this.totalCost = this.smallPizzaTotal + this.mediumPizzaTotal + this.largePizzaTotal;
+        this.orderActive = this.totalCost !== 0;
+        return 'R' + this.totalCost.toFixed(2);
+      },
+      priceFormat(price) {
+        return parseFloat(price.toFixed(2));
+      },
+      checkout() {
+        this.paymentReady = true;
+      },
+      pay() {
+        try {
+          this.payment = parseFloat(this.payment);
+          if (isNaN(this.payment)) {
+            return alert('Invalid input, please enter a valid number');
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+        if (this.payment >= this.totalCost) {
+          // Show thank you text for 10 seconds
+          this.thankYouText = true;
+          setTimeout(() => {
+            this.thankYouText = false;
+          }, 10000);
+          // Reset cart after 8 seconds
+          setTimeout(() => {
+            this.reset();
+          }, 8000);
+        } else {
+          // Show insufficient text for 3 seconds
+          this.insufficientText = true;
+          setTimeout(() => {
+            this.insufficientText = false;
+          }, 3000);
+        }
+      },
+      reset() {
+        // Reset all cart properties to their initial values
+        this.totalCost = 0;
+        this.smallPizzaTotal = 0;
+        this.mediumPizzaTotal = 0;
+        this.largePizzaTotal = 0;
+        this.smallPizzaOrder = false;
+        this.mediumPizzaOrder = false;
+        this.largePizzaOrder = false;
+        this.smallPizzaQuantity = 0;
+        this.mediumPizzaQuantity = 0;
+        this.largePizzaQuantity = 0;
+        this.orderActive = false;
+        this.paymentReady = false;
+        this.thankYouText = false;
+        this.insufficientText = false;
+        this.payment = 0;
+      },
+      getChange() {
+        this.getTotalCost();
+        this.change = this.payment - this.totalCost;
+        if (this.change > 0) {
+          return 'Here is your change R' + this.change.toFixed(2);
+        } else {
+          return '';
+        }
+      }
+    };
+  }
+</script>
 </html>
